@@ -103,7 +103,7 @@ class TestDistanceEvaluator(unittest.TestCase):
 
         self.assertEqual(self.dev.distance('a', ''),
                          self.penalties.get_drop_penalty())
-        self.assertEqual(self.distance('123456', ''),
+        self.assertEqual(self.dev.distance('123456', ''),
                          6*self.penalties.get_drop_penalty())
         self.assertEqual(self.dev.distance('abc', 'bc'),
                          self.penalties.get_drop_penalty())

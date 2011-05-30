@@ -91,9 +91,9 @@ class EditDistanceEvaluator():
             d.append([0]*(l2+1))
         
         for i in range(l1+1):
-            d[i][0] = i
+            d[i][0] = i*self.penalties.get_drop_penalty()
         for j in range(l2+1):
-            d[0][j] = j
+            d[0][j] = j*self.penalties.get_add_penalty()
 
         for j in range(1, l2+1):
             for i in range(1, l1+1):
@@ -106,7 +106,7 @@ class EditDistanceEvaluator():
                 del_penalty = d[i-1][j] + self.penalties.get_drop_penalty()
                 add_penalty = d[i][j-1] + self.penalties.get_add_penalty()
                 # Transpose is tricky.
-                if i > 2 and j > 2 and source[source_loc] == target[target_loc-1] and \
+                if False and i > 2 and j > 2 and source[source_loc] == target[target_loc-1] and \
                         source[source_loc-1] == target[target_loc]:
                     transpose_penalty = self.penalties.get_transpose_penalty()
                 else:
@@ -114,6 +114,12 @@ class EditDistanceEvaluator():
                 total_penalty = min(subst_penalty, del_penalty,\
                                         add_penalty, transpose_penalty)
                 d[i][j] = total_penalty
+
+        #print(' ', target)
+        #for x in range(len(d)):
+        #    print(d[x])
+
+        #print("")
 
         return d[-1][-1]
 
