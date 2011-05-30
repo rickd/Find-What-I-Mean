@@ -53,3 +53,11 @@ an exception will be thrown."""
         if character1 == character2:
             return 0
         return self.get_swap_penalty()
+
+class EditDistanceEvaluator():
+    
+    def __init__(self, penalties):
+        self.penalties = penalties
+
+    def distance(self, source, target):
+        return 15

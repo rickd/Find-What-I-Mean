@@ -47,6 +47,8 @@ class TestBasicPenalties(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.penalties.swap_cost('1', 1)
         with self.assertRaises(TypeError):
+            self.penalties.swap_cost(1, 1)
+        with self.assertRaises(TypeError):
             self.penalties.swap_cost('a', 'aa')
         with self.assertRaises(TypeError):
             self.penalties.swap_cost('aa', 'a')
@@ -57,6 +59,47 @@ class TestBasicPenalties(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.penalties.swap_cost('a', None)
 
+class TestDistanceEvaluator(unittest.TestCase):
 
+    def setUp(self):
+        self.penalties = fwim.BasicPenalties()
+        self.dev = fwim.EditDistanceEvaluator(self.penalties)
+
+    def test_identity(self):
+        self.assertEqual(self.dev.distance('', ''), 0)
+        self.assertEqual(self.dev.distance('a', 'a'), 0)
+        self.assertEqual(self.dev.distance('asdf1234', 'asdf1234'), 0)
+
+    def test_single_errors(self):
+        self.assertEqual(self.dev.distance('abc', 'acb'),
+                         self.penalties.get_transpose_penalty())
+        self.assertEqual(self.dev.distance('abc', 'bac'),
+                         self.penalties.get_transpose_penalty())
+        self.assertEqual(self.dev.distance('abcd', 'acbd'),
+                         self.penalties.get_transpose_penalty())
+
+        self.assertEqual(self.dev.distance('abc', 'abcd'),
+                         self.penalties.get_add_penalty())
+        self.assertEqual(self.dev.distance('abc', 'dabc'),
+                         self.penalties.get_add_penalty())
+        self.assertEqual(self.dev.distance('abc', 'adbc'),
+                         self.penalties.get_add_penalty())
+        self.assertEqual(self.dev.distance('abc', 'abdc'),
+                         self.penalties.get_add_penalty())
+
+        self.assertEqual(self.dev.distance('abc', 'bc'),
+                         self.penalties.get_drop_penalty())
+        self.assertEqual(self.dev.distance('abc', 'ac'),
+                         self.penalties.get_drop_penalty())
+        self.assertEqual(self.dev.distance('abc', 'ab'),
+                         self.penalties.get_drop_penalty())
+
+        self.assertEqual(self.dev.distance('abc', 'bbc'),
+                         self.penalties.get_swap_penalty())
+        self.assertEqual(self.dev.distance('abc', 'aac'),
+                         self.penalties.get_swap_penalty())
+        self.assertEqual(self.dev.distance('abc', 'abb'),
+                         self.penalties.get_swap_penalty())
+        
 if __name__ == '__main__':
     unittest.main()
