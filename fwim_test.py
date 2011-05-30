@@ -58,6 +58,8 @@ class TestBasicPenalties(unittest.TestCase):
             self.penalties.swap_cost(None, 'a')
         with self.assertRaises(TypeError):
             self.penalties.swap_cost('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, None)
 
 class TestDistanceEvaluator(unittest.TestCase):
 
