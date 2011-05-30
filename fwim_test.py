@@ -50,6 +50,12 @@ class TestBasicPenalties(unittest.TestCase):
             self.penalties.swap_cost('a', 'aa')
         with self.assertRaises(TypeError):
             self.penalties.swap_cost('aa', 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('aa', 'aa')
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', None)
 
 
 if __name__ == '__main__':
