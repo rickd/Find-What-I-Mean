@@ -30,5 +30,20 @@ class TestBasicPenalties(unittest.TestCase):
         self.assertTrue(self.penalties.get_add_penalty() >= 0)
         self.assertTrue(self.penalties.get_swap_penalty() >= 0)
 
+    def test_swap_cost(self):
+        self.assertEqual(0, self.penalties.swap_cost('a', 'a'))
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                         self.penalties.swap_cost('b', 'c'))
+
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(1, '1')
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('1', 1)
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', 'aa')
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('aa', 'a')
+
+
 if __name__ == '__main__':
     unittest.main()
