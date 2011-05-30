@@ -1,4 +1,4 @@
-#!/usr/bin/python -tt
+#!/usr/bin/python3 -tt
 
 #    Search for matches in word lists accounting for errors
 #    Copyright (C) 2011 Rick Dangerous
