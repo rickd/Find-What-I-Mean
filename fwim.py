@@ -15,3 +15,24 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+class BasicPenalties():
+    transpose_penalty = 10 # 'ab' -> 'ba'
+    drop_penalty = 10      # 'abc' -> 'ac'
+    add_penalty = 10       # 'ac' -> 'abc'
+    swap_penalty = 10      # 'ab' -> 'ac'
+
+    def __init__(self):
+        pass
+
+    def get_transpose_penalty(self):
+        return BasicPenalties.transpose_penalty
+
+    def get_drop_penalty(self):
+        return BasicPenalties.drop_penalty
+
+    def get_add_penalty(self):
+        return BasicPenalties.add_penalty
+
+    def get_swap_penalty(self):
+        return BasicPenalties.swap_penalty

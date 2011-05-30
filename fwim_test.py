@@ -15,3 +15,17 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+import unittest
+import fwim
+
+class TestBasicPenalties(unittest.TestCase):
+    
+    def setUp(self):
+        self.penalties = fwim.BasicPenalties()
+
+    def test_positivity(self):
+        self.assertTrue(self.penalties.get_transpose_penalty() >= 0)
+
+if __name__ == '__main__':
+    unittest.main()
