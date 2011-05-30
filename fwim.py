@@ -17,6 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class BasicPenalties():
+    """Basic Damerau-Levenshtein distance errors."""
     transpose_penalty = 10 # 'ab' -> 'ba'
     drop_penalty = 10      # 'abc' -> 'ac'
     add_penalty = 10       # 'ac' -> 'abc'
