@@ -126,6 +126,20 @@ class TestDistanceEvaluator(unittest.TestCase):
         self.assertEqual(self.dev.distance('abcd', 'acbd'),
                          self.penalties.get_transpose_penalty())
 
+    def test_multiple_errors(self):
+        # http://en.wikipedia.org/wiki/Damerau%E2%80%93Levenshtein_distance
+        self.assertEqual(self.dev.distance('ca', 'abc'),
+                         self.penalties.get_drop_penalty() + 
+                         2*self.penalties.get_add_penalty())
+
+        self.assertEqual(self.dev.distance('abcdefg', 'acbdeg'),
+                         self.penalties.get_transpose_penalty() +
+                         self.penalties.get_drop_penalty())
+
+        self.assertEqual(self.dev.distance('abcdefg', 'acbdefgz'),
+                         self.penalties.get_transpose_penalty() +
+                         self.penalties.get_add_penalty())
+
         
 if __name__ == '__main__':
     unittest.main()
