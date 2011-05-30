@@ -86,18 +86,12 @@ class TestDistanceEvaluator(unittest.TestCase):
             self.dev.distance(1, 1)
 
     def test_single_errors(self):
-        self.assertEqual(self.dev.distance('abc', 'acb'),
-                         self.penalties.get_transpose_penalty())
-        self.assertEqual(self.dev.distance('abc', 'bac'),
-                         self.penalties.get_transpose_penalty())
-        self.assertEqual(self.dev.distance('abcd', 'acbd'),
-                         self.penalties.get_transpose_penalty())
-
         self.assertEqual(self.dev.distance('', ''), 0)
         self.assertEqual(self.dev.distance('', 'a'),
                          self.penalties.get_add_penalty())
-        self.assertEqual(self.distance('', '123456'),
+        self.assertEqual(self.dev.distance('', '123456'),
                          6*self.penalties.get_add_penalty())
+
         self.assertEqual(self.dev.distance('abc', 'abcd'),
                          self.penalties.get_add_penalty())
         self.assertEqual(self.dev.distance('abc', 'dabc'),
@@ -124,6 +118,14 @@ class TestDistanceEvaluator(unittest.TestCase):
                          self.penalties.get_swap_penalty())
         self.assertEqual(self.dev.distance('abc', 'abb'),
                          self.penalties.get_swap_penalty())
+
+        self.assertEqual(self.dev.distance('abc', 'acb'),
+                         self.penalties.get_transpose_penalty())
+        self.assertEqual(self.dev.distance('abc', 'bac'),
+                         self.penalties.get_transpose_penalty())
+        self.assertEqual(self.dev.distance('abcd', 'acbd'),
+                         self.penalties.get_transpose_penalty())
+
         
 if __name__ == '__main__':
     unittest.main()

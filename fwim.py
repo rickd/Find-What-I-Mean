@@ -77,9 +77,9 @@ class EditDistanceEvaluator():
             raise TypeError('Target is not a string.')
 
         if len(source) == 0:
-            return self.penalties.get_drop_penalty()*len(target)
+            return self.penalties.get_add_penalty()*len(target)
         if len(target) == 0:
-            return self.penalties.get_add_penalty()*len(source)
+            return self.penalties.get_drop_penalty()*len(source)
 
         return self.__distance(source, target)
 
@@ -113,5 +113,7 @@ class EditDistanceEvaluator():
                     transpose_penalty =  del_penalty + 1 # Ensures this won't be chosen.
                 total_penalty = min(subst_penalty, del_penalty,\
                                         add_penalty, transpose_penalty)
+                d[i][j] = total_penalty
+
         return d[-1][-1]
 
