@@ -18,25 +18,24 @@
 
 class BasicPenalties():
     """Basic Damerau-Levenshtein distance errors."""
-    transpose_penalty = 10 # 'ab' -> 'ba'
-    drop_penalty = 10      # 'abc' -> 'ac'
-    add_penalty = 10       # 'ac' -> 'abc'
-    swap_penalty = 10      # 'ab' -> 'ac'
 
     def __init__(self):
-        pass
+        self.transpose_penalty = 10 # 'ab' -> 'ba'
+        self.drop_penalty = 10      # 'abc' -> 'ac'
+        self.add_penalty = 10       # 'ac' -> 'abc'
+        self.swap_penalty = 10      # 'ab' -> 'ac'
 
     def get_transpose_penalty(self):
-        return BasicPenalties.transpose_penalty
+        return self.transpose_penalty
 
     def get_drop_penalty(self):
-        return BasicPenalties.drop_penalty
+        return self.drop_penalty
 
     def get_add_penalty(self):
-        return BasicPenalties.add_penalty
+        return self.add_penalty
 
     def get_swap_penalty(self):
-        return BasicPenalties.swap_penalty
+        return self.swap_penalty
 
     def swap_cost(self, character1, character2):
         """The cost of replacing character 1
@@ -53,6 +52,18 @@ an exception will be thrown."""
         if character1 == character2:
             return 0
         return self.get_swap_penalty()
+
+class DistinctPenalties(BasicPenalties):
+    """A class for testing that has different
+values for every type of error."""
+
+    def __init__(self):
+        super(DistinctPenalties, self).__init__()
+        self.transpose_penalty = 11
+        self.drop_penalty = 12
+        self.add_penalty = 13
+        self.swap_penalty = 14
+
 
 class EditDistanceEvaluator():
     

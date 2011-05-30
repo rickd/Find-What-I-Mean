@@ -62,7 +62,7 @@ class TestBasicPenalties(unittest.TestCase):
 class TestDistanceEvaluator(unittest.TestCase):
 
     def setUp(self):
-        self.penalties = fwim.BasicPenalties()
+        self.penalties = fwim.DistinctPenalties()
         self.dev = fwim.EditDistanceEvaluator(self.penalties)
 
     def test_identity(self):
