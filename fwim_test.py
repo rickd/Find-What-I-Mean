@@ -26,6 +26,9 @@ class TestBasicPenalties(unittest.TestCase):
 
     def test_positivity(self):
         self.assertTrue(self.penalties.get_transpose_penalty() >= 0)
+        self.assertTrue(self.penalties.get_drop_penalty() >= 0)
+        self.assertTrue(self.penalties.get_add_penalty() >= 0)
+        self.assertTrue(self.penalties.get_swap_penalty() >= 0)
 
 if __name__ == '__main__':
     unittest.main()
