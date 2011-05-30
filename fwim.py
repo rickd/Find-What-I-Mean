@@ -71,4 +71,47 @@ class EditDistanceEvaluator():
         self.penalties = penalties
 
     def distance(self, source, target):
-        return 15
+        if type(source) != type('s'):
+            raise TypeError('Source is not a string.')
+        if type(target) != type('s'):
+            raise TypeError('Target is not a string.')
+
+        if len(source) == 0:
+            return self.penalties.get_drop_penalty()*len(target)
+        if len(target) == 0:
+            return self.penalties.get_add_penalty()*len(source)
+
+        return self.__distance(source, target)
+
+    def __distance(self, source, target):
+        l1 = len(source)
+        l2 = len(target)
+        d = []
+        for i in range(l1+1):
+            d.append([0]*(l2+1))
+        
+        for i in range(l1+1):
+            d[i][0] = i
+        for j in range(l2+1):
+            d[0][j] = j
+
+        for j in range(1, l2+1):
+            for i in range(1, l1+1):
+                source_loc = i-1
+                target_loc = j-1
+                source_letter = source[source_loc]
+                target_letter = target[target_loc]
+                subst_penalty = d[i-1][j-1] + \
+                    self.penalties.swap_cost(source_letter, target_letter)
+                del_penalty = d[i-1][j] + self.penalties.get_drop_penalty()
+                add_penalty = d[i][j-1] + self.penalties.get_add_penalty()
+                # Transpose is tricky.
+                if i > 2 and j > 2 and source[source_loc] == target[target_loc-1] and \
+                        source[source_loc-1] == target[target_loc]:
+                    transpose_penalty = self.penalties.get_transpose_penalty()
+                else:
+                    transpose_penalty =  del_penalty + 1 # Ensures this won't be chosen.
+                total_penalty = min(subst_penalty, del_penalty,\
+                                        add_penalty, transpose_penalty)
+        return d[-1][-1]
+
