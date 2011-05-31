@@ -73,13 +73,25 @@ class TestCustomSwapPenalties(unittest.TestCase):
             self.penalties.set_penalty(['a'], 'a')
         with self.assertRaises(TypeError):
             self.penalties.set_penalty(['a'], ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, None)
 
         with self.assertRaises(TypeError):
-            self.penalties.swap_penalty('a', ['a'])
+            self.penalties.swap_cost('a', ['a'])
         with self.assertRaises(TypeError):
-            self.penalties.swap_penalty('a', ['a'])
+            self.penalties.swap_cost('a', ['a'])
         with self.assertRaises(TypeError):
-            self.penalties.swap_penalty('a', ['a'])
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, None)
 
     def test_penalty_setting(self):
         old_penalty = self.penalties.get_swap_penalty()
