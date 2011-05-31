@@ -66,8 +66,42 @@ class TestCustomSwapPenalties(unittest.TestCase):
     def setUp(self):
         self.penalties = fwim.CustomSwapPenalties()
 
-    def test_values(self):
-        pass
+    def test_bad_input(self):
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], ['a'])
+
+        with self.assertRaises(TypeError):
+            self.penalties.swap_penalty('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_penalty('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_penalty('a', ['a'])
+
+    def test_penalty_setting(self):
+        old_penalty = self.penalties.get_swap_penalty()
+        new_penalty = 7
+        new_new_penalty = 102
+
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    old_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    old_penalty)
+
+        self.penalties.set_penalty('a', 'b', new_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    new_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    old_penalty)
+
+        self.penalties.set_penalty('a', 'b', new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    old_penalty)
 
 class TestDistanceEvaluator(unittest.TestCase):
 

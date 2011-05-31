@@ -75,15 +75,15 @@ class CustomSwapPenalties(BasicPenalties):
         self.penalties = {}
 
     def set_penalty(self, character1, character2, penalty_value):
-        self.check_input(character1, character2)
-        self.penalties[(char1, char2)] = penalty_value
+        self.check_params_single_characters(character1, character2)
+        self.penalties[(character1, character2)] = penalty_value
 
-    def swap_penalty(self, character1, character2):
-        self.check_input(character1, character2)
+    def swap_cost(self, character1, character2):
+        self.check_params_single_characters(character1, character2)
         key = (character1, character2)
-        if self.penalties.has_key(key):
+        if key in self.penalties:
             return self.penalties[key]
-        return super(CustomSwapPenalties, self).swap_penalty()
+        return super(CustomSwapPenalties, self).swap_cost(character1, character2)
 
 class EditDistanceEvaluator():
     
