@@ -102,17 +102,23 @@ class TestCustomSwapPenalties(unittest.TestCase):
                     old_penalty)
         self.assertEqual(self.penalties.swap_cost('b', 'a'),
                     old_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                    old_penalty)
 
         self.penalties.set_penalty('a', 'b', new_penalty)
         self.assertEqual(self.penalties.swap_cost('a', 'b'),
                     new_penalty)
         self.assertEqual(self.penalties.swap_cost('b', 'a'),
                     old_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                    old_penalty)
 
         self.penalties.set_penalty('a', 'b', new_new_penalty)
         self.assertEqual(self.penalties.swap_cost('a', 'b'),
                     new_new_penalty)
         self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    old_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
                     old_penalty)
 
 class TestDistanceEvaluator(unittest.TestCase):
