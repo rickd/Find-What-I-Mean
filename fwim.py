@@ -69,6 +69,9 @@ values for every type of error."""
         self.swap_penalty = 14
 
 class CustomSwapPenalties(BasicPenalties):
+"""A class that allows the user to
+set a custom penalty value for certain
+letter pairs."""
 
     def __init__(self):
         super(CustomSwapPenalties, self).__init__()
