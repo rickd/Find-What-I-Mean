@@ -37,18 +37,22 @@ class BasicPenalties():
     def get_swap_penalty(self):
         return self.swap_penalty
 
-    def swap_cost(self, character1, character2):
-        """The cost of replacing character 1
-with character 2. If arguments are not characters,
-an exception will be thrown."""
-        if type(character1) != type('a'):
-            raise TypeError("First argument not a Unicode character.")
-        if type(character2) != type('a'):
-            raise TypeError("Second argument not a Unicode character.")
+    def check_params_single_characters(self, character1, character2):
+        if type(character1) != type('s'):
+            raise TypeError('Source is not a string.')
+        if type(character2) != type('s'):
+            raise TypeError('Target is not a string.')
         if len(character1) != 1:
             raise TypeError("First argument not a single character.")
         if len(character2) != 1:
             raise TypeError("Second argument not a single character.")
+
+    def swap_cost(self, character1, character2):
+        """The cost of replacing character 1
+with character 2. If arguments are not characters,
+an exception will be thrown."""
+        self.check_params_single_characters(character1, character2)
+
         if character1 == character2:
             return 0
         return self.get_swap_penalty()
@@ -64,6 +68,22 @@ values for every type of error."""
         self.add_penalty = 13
         self.swap_penalty = 14
 
+class CustomSwapPenalties(BasicPenalties):
+
+    def __init__(self):
+        super(CustomSwapPenalties, self).__init__()
+        self.penalties = {}
+
+    def set_penalty(self, character1, character2, penalty_value):
+        self.check_input(character1, character2)
+        self.penalties[(char1, char2)] = penalty_value
+
+    def swap_penalty(self, character1, character2):
+        self.check_input(character1, character2)
+        key = (character1, character2)
+        if self.penalties.has_key(key):
+            return self.penalties[key]
+        return super(CustomSwapPenalties, self).swap_penalty()
 
 class EditDistanceEvaluator():
     

@@ -61,6 +61,14 @@ class TestBasicPenalties(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.penalties.swap_cost(None, None)
 
+class TestCustomSwapPenalties(unittest.TestCase):
+
+    def setUp(self):
+        self.penalties = fwim.CustomSwapPenalties()
+
+    def test_values(self):
+        pass
+
 class TestDistanceEvaluator(unittest.TestCase):
 
     def setUp(self):
