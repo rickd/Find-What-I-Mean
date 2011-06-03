@@ -98,7 +98,7 @@ class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
         character1 = character1.lower()
         character2 = character2.lower()
         if character2 < character1:
-            (character1, character2) = (character1, character2)
+            (character1, character2) = (character2, character1)
         return (character1, character2)
     
     def set_penalty(self, character1, character2, penalty_value):
