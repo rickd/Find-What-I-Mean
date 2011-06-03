@@ -202,6 +202,37 @@ class TestDistanceEvaluator(unittest.TestCase):
                          self.penalties.get_transpose_penalty() +
                          self.penalties.get_add_penalty())
 
-        
+class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
+    def setUp(self):
+        self.penalties = fwim.CaseInsensitiveIgnoreOrderPenalties()
+
+    def test_bad_input(self):
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, None)
+
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, None)
+
+
 if __name__ == '__main__':
     unittest.main()

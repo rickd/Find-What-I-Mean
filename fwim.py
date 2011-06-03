@@ -69,9 +69,9 @@ values for every type of error."""
         self.swap_penalty = 14
 
 class CustomSwapPenalties(BasicPenalties):
-"""A class that allows the user to
-set a custom penalty value for certain
-letter pairs."""
+    """A class that allows the user to
+    set a custom penalty value for certain
+    letter pairs."""
 
     def __init__(self):
         super(CustomSwapPenalties, self).__init__()
@@ -87,6 +87,29 @@ letter pairs."""
         if key in self.penalties:
             return self.penalties[key]
         return super(CustomSwapPenalties, self).swap_cost(character1, character2)
+
+class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
+
+    def __init__(self):
+        super(CaseInsensitiveIgnoreOrderPenalties, self).__init__()
+
+    def order_and_lower(self, character1, character2):
+        self.check_params_single_characters(character1, character2)
+        character1 = character1.lower()
+        character2 = character2.lower()
+        if character2 < character1:
+            (character1, character2) = (character1, character2)
+        return (character1, character2)
+    
+    def set_penalty(self, character1, character2, penalty_value):
+        (character1, character2) = self.order_and_lower(character1, character2)
+        super(CaseInsensitiveIgnoreOrderPenalties, self).set_penalty(character1, character2, penalty_value)
+        
+    def swap_cost(self, character1, character2):
+        (character1, character2) = self.order_and_lower(character1, character2)
+        return super(CaseInsensitiveIgnoreOrderPenalties, self).swap_cost(character1, character2)
+    
+
 
 class EditDistanceEvaluator():
     
