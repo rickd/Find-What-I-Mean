@@ -284,7 +284,9 @@ class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
     def test_case_insensitivity_and_order(self):
         old_penalty = self.penalties.get_swap_penalty()
         new_penalty = 7
+        new_new_penalty = 42
         self.assertNotEqual(old_penalty, new_penalty)
+        self.assertNotEqual(old_penalty, new_new_penalty)
 
         self.assertEqual(self.penalties.swap_cost('e', 'f'),
                     old_penalty)
@@ -305,6 +307,15 @@ class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
         self.assertEqual(self.penalties.swap_cost('F', 'E'),
                     new_penalty)
         
+        self.penalties.set_penalty('F', 'E', new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('e', 'f'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('E', 'F'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('f', 'e'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('F', 'E'),
+                    new_new_penalty)
 
 if __name__ == '__main__':
     unittest.main()
