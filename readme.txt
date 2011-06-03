@@ -32,6 +32,6 @@ hella
 hellq
 
 Then the search "hellp" probably means "hello", since o and p are very
-close in the keyboard, which makes it the most probable typo.
+close in the keyboard, it is the most probable typo.
 
 And so on and so on.
