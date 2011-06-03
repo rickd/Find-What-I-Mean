@@ -185,19 +185,19 @@ class BasicWordMatcher():
         self.check_single_word(word)
         self.words.add(word)
 
-    def find_closest(word):
+    def find_closest(self, word):
         self.check_string(word)
         
         if len(self.words) == 0:
             return ('', self.dev.distance(word, ''))
 
-        min_dist = 1000000000000
+        min_penalty = 1000000000000
         closest = ''
 
         for w in self.words:
-            dist = self.dev(word, w)
-            if dist < min_dist:
-                min_dist = dist
+            dist = self.dev.distance(word, w)
+            if dist < min_penalty:
+                min_penalty = dist
                 closest = w
 
-        return (w, min_dist)
+        return (closest, min_penalty)

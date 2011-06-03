@@ -347,6 +347,23 @@ class TestBasicWordMatcher(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.matcher.add_word('a ')
 
+        with self.assertRaises(TypeError):
+            self.matcher.find_closest(['a'])
+        with self.assertRaises(TypeError):
+            self.matcher.find_closest(None)
+
+    def test_matching(self):
+        self.matcher.add_word('one')
+        self.matcher.add_word('two')
+        self.matcher.add_word('three')
+
+        (match, penalty) = self.matcher.find_closest('ane')
+        self.assertEqual(match, 'one')
+        (match, penalty) = self.matcher.find_closest('to')
+        self.assertEqual(match, 'two')
+        (match, penalty) = self.matcher.find_closest('thrice')
+        self.assertEqual(match, 'three')
+
 
 if __name__ == '__main__':
     unittest.main()
