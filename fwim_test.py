@@ -331,5 +331,22 @@ class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
         self.assertEqual(self.penalties.swap_cost('F', 'E'),
                     new_new_penalty)
 
+class TestBasicWordMatcher(unittest.TestCase):
+    def setUp(self):
+        self.matcher = fwim.BasicWordMatcher()
+
+    def test_bad_input(self):
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(['a'])
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(None)
+        with self.assertRaises(TypeError):
+            self.matcher.add_word('a a')
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(None, ' a')
+        with self.assertRaises(TypeError):
+            self.matcher.add_word('a ')
+
+
 if __name__ == '__main__':
     unittest.main()

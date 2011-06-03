@@ -163,3 +163,41 @@ class EditDistanceEvaluator():
 
         return d[-1][-1]
 
+class BasicWordMatcher():
+    def __init__(self):
+        self.penalties = BasicPenalties()
+        self.dev = EditDistanceEvaluator(self.penalties)
+        self.words = set()
+        
+    def size(self):
+        return len(self.words)
+
+    def check_string(self, word):
+        if type(word) != type('s'):
+            raise TypeError('Argument is not a string.')
+
+    def check_single_word(self, word):
+        self.check_string(word)
+        if ' ' in word:
+            raise TypeError('Argument is not a single word.')
+
+    def add_word(self, word):
+        self.check_single_word(word)
+        self.words.add(word)
+
+    def find_closest(word):
+        self.check_string(word)
+        
+        if len(self.words) == 0:
+            return ('', self.dev.distance(word, ''))
+
+        min_dist = 1000000000000
+        closest = ''
+
+        for w in self.words:
+            dist = self.dev(word, w)
+            if dist < min_dist:
+                min_dist = dist
+                closest = w
+
+        return (w, min_dist)
