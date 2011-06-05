@@ -194,9 +194,15 @@ class EditDistanceEvaluator():
         return d[-1][-1]
 
 class BasicWordMatcher():
-    def __init__(self):
-        self.penalties = BasicPenalties()
-        self.dev = EditDistanceEvaluator(self.penalties)
+    def __init__(self, penalty=None, evaluator=None):
+        if penalty is None:
+            self.penalties = BasicPenalties()
+        else:
+            self.penalties = penalty
+        if evaluator is None:
+            self.dev = EditDistanceEvaluator(self.penalties)
+        else:
+            self.dev = evaluator
         self.words = set()
         
     def size(self):
@@ -232,6 +238,18 @@ class BasicWordMatcher():
 
         return (closest, min_penalty)
 
+class CaseInsensitiveWordMatcher(BasicWordMatcher):
+
+    def __init__(self, penalty=None, evaluator=None):
+        super(CaseInsensitiveWordMatcher, self).__init__(penalty, evaluator)
+        
+    def add_word(self, word):
+        self.check_string(word)
+        super(CaseInsensitiveWordMatcher, self).add_word(word.lower())
+        
+    def find_closest(self, word):
+        self.check_string(word)
+        return super(CaseInsensitiveWordMatcher, self).find_closest(word.lower())
 
 # Classic Burkhard-Keller Tree. This only works on
 # metrics. Damerau-Levenshtein is _not_ a metric. 

@@ -438,6 +438,54 @@ class TestBasicWordMatcher(unittest.TestCase):
         (match, penalty) = self.matcher.find_closest('thrice')
         self.assertEqual(match, 'three')
 
+class TestCaseInsensitiveWordMatcher(unittest.TestCase):
+    def setUp(self):
+        self.matcher = fwim.CaseInsensitiveWordMatcher()
+
+    def test_bad_input(self):
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(['a'])
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(None)
+        with self.assertRaises(TypeError):
+            self.matcher.add_word('a a')
+        with self.assertRaises(TypeError):
+            self.matcher.add_word(None, ' a')
+        with self.assertRaises(TypeError):
+            self.matcher.add_word('a ')
+
+        with self.assertRaises(TypeError):
+            self.matcher.find_closest(['a'])
+        with self.assertRaises(TypeError):
+            self.matcher.find_closest(None)
+
+    def test_matching(self):
+        self.matcher.add_word('one')
+        self.matcher.add_word('two')
+        self.matcher.add_word('three')
+
+        (match, penalty) = self.matcher.find_closest('ane')
+        self.assertEqual(match, 'one')
+        (match, penalty) = self.matcher.find_closest('to')
+        self.assertEqual(match, 'two')
+        (match, penalty) = self.matcher.find_closest('thrice')
+        self.assertEqual(match, 'three')
+
+        (match, penalty) = self.matcher.find_closest('ONE')
+        self.assertEqual(match, 'one')
+        self.assertEqual(penalty, 0)
+        (match, penalty) = self.matcher.find_closest('OnE')
+        self.assertEqual(match, 'one')
+        self.assertEqual(penalty, 0)
+
+        self.matcher.add_word('FOUR')
+        (match, penalty) = self.matcher.find_closest('four')
+        self.assertEqual(match, 'four')
+        self.assertEqual(penalty, 0)
+        (match, penalty) = self.matcher.find_closest('fOUr')
+        self.assertEqual(match, 'four')
+        self.assertEqual(penalty, 0)
+
 class TestBKTree(unittest.TestCase):
     def setUp(self):
         self.penalties = fwim.PlainLevenshteinPenalties()
