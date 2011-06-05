@@ -379,25 +379,6 @@ class TestBasicWordMatcher(unittest.TestCase):
         (match, penalty) = self.matcher.find_closest('thrice')
         self.assertEqual(match, 'three')
 
-# Disable because this is too slow for development.
-#     def test_big(self):
-#         words = []
-#         ifile = open('/usr/share/dict/words')
-#         for w in ifile:
-#             w = w.strip()
-#             if not w.endswith("'s") and len(w) > 2:
-#                 words.append(w)
-#                 if len(words) >= 1000:
-#                     break
-#         ifile.close()
-# 
-#         for w in words:
-#             self.matcher.add_word(w)
-# 
-#         for w in words[:50]:
-#             (match, penalty) = self.matcher.find_closest(w)
-#             self.assertEqual(match, w)
-# 
 class TestBKTree(unittest.TestCase):
     def setUp(self):
         self.penalties = fwim.PlainLevenshteinPenalties()
