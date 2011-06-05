@@ -237,14 +237,16 @@ class BKTree():
             return
         if distance in node.children:
             self.__add_recursively(node.children[distance], word)
-        new_node = BKNode(word)
-        node.children[distance] = new_node
+        else:
+            new_node = BKNode(word)
+            node.children[distance] = new_node
 
     def find(self, query, max_error):
         if self.root is None:
             return []
         matches = []
         self.__match_recursively(self.root, query, max_error, matches)
+        matches.sort()
         return matches
 
     def __match_recursively(self, node, query, max_error, matches):

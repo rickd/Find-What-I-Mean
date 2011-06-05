@@ -61,6 +61,7 @@ class TestBasicPenalties(unittest.TestCase):
         with self.assertRaises(TypeError):
             self.penalties.swap_cost(None, None)
 
+
 class TestCustomSwapPenalties(unittest.TestCase):
 
     def setUp(self):
@@ -203,6 +204,20 @@ class TestDistanceEvaluator(unittest.TestCase):
         self.assertEqual(self.dev.distance('abcdefg', 'acbdefgz'),
                          self.penalties.get_transpose_penalty() +
                          self.penalties.get_add_penalty())
+
+class TestPlainLevenshtein(unittest.TestCase):
+
+    def setUp(self):
+        self.penalties = fwim.PlainLevenshteinPenalties()
+        self.dev = fwim.EditDistanceEvaluator(self.penalties)
+
+    def test_penalties(self):
+        penalty = self.penalties.get_swap_penalty()
+        self.assertEqual(penalty, self.dev.distance('fool', 'foot'))
+        self.assertEqual(penalty, self.dev.distance('fool', 'tool'))
+        self.assertEqual(2*penalty, self.dev.distance('foot', 'tool'))
+        self.assertEqual(2*penalty, self.dev.distance('abc', 'bac'))
+
 
 class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
     def setUp(self):
@@ -385,10 +400,12 @@ class TestBasicWordMatcher(unittest.TestCase):
 # 
 class TestBKTree(unittest.TestCase):
     def setUp(self):
-        self.dev = fwim.EditDistanceEvaluator(fwim.PlainLevenshteinPenalties)
+        self.penalties = fwim.PlainLevenshteinPenalties()
+        self.dev = fwim.EditDistanceEvaluator(self.penalties)
         self.bktree = fwim.BKTree(self.dev)
 
     def test_matching(self):
+        penalty = self.penalties.get_add_penalty()
         self.assertEqual(len(self.bktree.find('helo', 10000)), 0)
 
         self.bktree.add_word('fool')
@@ -396,6 +413,28 @@ class TestBKTree(unittest.TestCase):
         self.assertEqual(len(match), 1)
         self.assertEqual(0, match[0][0])
         self.assertEqual('fool', match[0][1])
+        
+        self.bktree.add_word('foot')
+        match = self.bktree.find('foot', 0)
+        self.assertEqual(len(match), 1)
+        self.assertEqual(0, match[0][0])
+        self.assertEqual('foot', match[0][1])
+
+        match = self.bktree.find('foot', penalty)
+        self.assertEqual(len(match), 2)
+        self.assertEqual(0, match[0][0])
+        self.assertEqual('foot', match[0][1])
+
+        self.bktree.add_word('tool')
+        match = self.bktree.find('foot', penalty)
+        self.assertEqual(len(match), 2)
+        self.assertEqual(0, match[0][0])
+        self.assertEqual('foot', match[0][1])
+
+        match = self.bktree.find('foot', 2*penalty)
+        self.assertEqual(len(match), 3)
+        self.assertEqual(0, match[0][0])
+        self.assertEqual('foot', match[0][1])
 
 if __name__ == '__main__':
     unittest.main()
