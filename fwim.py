@@ -214,9 +214,9 @@ class BasicWordMatcher():
         return (closest, min_penalty)
 
 
-# Classic Burkhard-Keller Tree. Note that this only works
-# on metrics. Damerau-Levenshtein is _not_ a metric. Plain
-# Levenshtein is.
+# Classic Burkhard-Keller Tree. This only works on
+# metrics. Damerau-Levenshtein is _not_ a metric. 
+# Plain Levenshtein is.
 
 class BKTree():
 
@@ -232,13 +232,15 @@ class BKTree():
         self.__add_recursively(current, word)
 
     def __add_recursively(self, node, word):
-        distance = self.distance(word, node.word)
+        distance = self.distance.distance(word, node.word)
+        if distance == 0:
+            return
         if distance in node.children:
             self.__add_recursively(node.children[distance], word)
         new_node = BKNode(word)
         node.children[distance] = new_node
 
-    def get_sorted_matches_within(self, query, max_error):
+    def find(self, query, max_error):
         if self.root is None:
             return []
         matches = []
@@ -246,7 +248,7 @@ class BKTree():
         return matches
 
     def __match_recursively(self, node, query, max_error, matches):
-        distance = self.distance(word, node.word)
+        distance = self.distance.distance(query, node.word)
         if distance <= max_error:
             matches.append((distance, node.word))
         for d in node.children.keys():
