@@ -57,6 +57,17 @@ an exception will be thrown."""
             return 0
         return self.get_swap_penalty()
 
+class PlainLevenshteinPenalties(BasicPenalties):
+    """A set where the transposition penalty is so
+large that it is never chosen."""
+
+    def __init__(self):
+        super(PlainLevenshteinPenalties, self).__init__()
+        self.transpose_penalty = 100000
+        self.drop_penalty = 10
+        self.add_penalty = 10
+        self.swap_penalty = 10
+
 class DistinctPenalties(BasicPenalties):
     """A class for testing that has different
 values for every type of error."""
@@ -201,3 +212,49 @@ class BasicWordMatcher():
                 closest = w
 
         return (closest, min_penalty)
+
+
+# Classic Burkhard-Keller Tree. Note that this only works
+# on metrics. Damerau-Levenshtein is _not_ a metric. Plain
+# Levenshtein is.
+
+class BKTree():
+
+    def __init__(self, distance_function):
+        self.distance = distance_function
+        self.root = None
+
+    def add_word(self, word):
+        if self.root is None:
+            self.root = BKNode(word)
+            return
+        current = self.root
+        self.__add_recursively(current, word)
+
+    def __add_recursively(self, node, word):
+        distance = self.distance(word, node.word)
+        if distance in node.children:
+            self.__add_recursively(node.children[distance], word)
+        new_node = BKNode(word)
+        node.children[distance] = new_node
+
+    def get_sorted_matches_within(self, query, max_error):
+        if self.root is None:
+            return []
+        matches = []
+        self.__match_recursively(self.root, query, max_error, matches)
+        return matches
+
+    def __match_recursively(self, node, query, max_error, matches):
+        distance = self.distance(word, node.word)
+        if distance <= max_error:
+            matches.append((distance, node.word))
+        for d in node.children.keys():
+            if d >= distance-max_error and d <= distance+max_error:
+                self.__match_recursively(node.children[d], query, max_error, matches)
+
+class BKNode():
+    def __init__(self, word):
+        self.word = word
+        self.children = {}
+
