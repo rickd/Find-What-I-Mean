@@ -99,6 +99,25 @@ class CustomSwapPenalties(BasicPenalties):
             return self.penalties[key]
         return super(CustomSwapPenalties, self).swap_cost(character1, character2)
 
+class IgnoreOrderPenalties(CustomSwapPenalties):
+
+    def __init__(self):
+        super(IgnoreOrderPenalties, self).__init__()
+
+    def order(self, character1, character2):
+        self.check_params_single_characters(character1, character2)
+        if character2 < character1:
+            (character1, character2) = (character2, character1)
+        return (character1, character2)
+    
+    def set_penalty(self, character1, character2, penalty_value):
+        (character1, character2) = self.order(character1, character2)
+        super(IgnoreOrderPenalties, self).set_penalty(character1, character2, penalty_value)
+        
+    def swap_cost(self, character1, character2):
+        (character1, character2) = self.order(character1, character2)
+        return super(IgnoreOrderPenalties, self).swap_cost(character1, character2)
+
 class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
 
     def __init__(self):

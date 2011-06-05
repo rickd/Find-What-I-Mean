@@ -218,6 +218,65 @@ class TestPlainLevenshtein(unittest.TestCase):
         self.assertEqual(2*penalty, self.dev.distance('foot', 'tool'))
         self.assertEqual(2*penalty, self.dev.distance('abc', 'bac'))
 
+class TestIgnoreOrderPenalties(unittest.TestCase):
+    def setUp(self):
+        self.penalties = fwim.IgnoreOrderPenalties()
+
+    def test_bad_input(self):
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(['a'], ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, 'a')
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.set_penalty(None, None)
+
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost('a', None)
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, ['a'])
+        with self.assertRaises(TypeError):
+            self.penalties.swap_cost(None, None)
+
+    def test_order(self):
+        old_penalty = self.penalties.get_swap_penalty()
+        new_penalty = 7
+        new_new_penalty = 42
+        self.assertNotEqual(old_penalty, new_penalty)
+
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    old_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    old_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                    old_penalty)
+
+        self.penalties.set_penalty('a', 'b', new_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    new_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    new_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                    old_penalty)
+
+        self.penalties.set_penalty('b', 'a', new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'b'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.swap_cost('b', 'a'),
+                    new_new_penalty)
+        self.assertEqual(self.penalties.get_swap_penalty(),
+                    old_penalty)
 
 class TestCaseInsensitiveIgnoreOrderPenalties(unittest.TestCase):
     def setUp(self):
