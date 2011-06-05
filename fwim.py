@@ -236,7 +236,7 @@ class BasicWordMatcher():
                 min_penalty = dist
                 closest = w
 
-        return (closest, min_penalty)
+        return (min_penalty, closest)
 
 class CaseInsensitiveWordMatcher(BasicWordMatcher):
 
