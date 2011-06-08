@@ -118,6 +118,32 @@ class IgnoreOrderPenalties(CustomSwapPenalties):
         (character1, character2) = self.order(character1, character2)
         return super(IgnoreOrderPenalties, self).swap_cost(character1, character2)
 
+class ErrorGroupPenalties(CustomSwapPenalties):
+    
+    def __init__(self):
+        super(ErrorGroupPenalties, self).__init__()
+        self.groups = {}
+        self.group_penalties = {}
+        
+    def set_error_group_penalty(self, base_character, group_characters, penalty):
+        for c in group_characters:
+            self.groups[c] = base_character
+        self.groups[base_character] = base_character
+        self.group_penalties[base_character] = penalty
+    
+    def swap_cost(self, character1, character2):
+        if character1 == character2:
+            return super(ErrorGroupPenalties, self).swap_cost(character1, character2)
+        
+        # Certainly distinct
+        if character1 in self.groups:
+            base1 = self.groups[character1]
+            if character2 in self.groups:
+                base2 = self.groups[character2]
+                if base1 == base2:
+                    return self.group_penalties[base1]
+        return super(ErrorGroupPenalties, self).swap_cost(character1, character2)
+
 class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
 
     def __init__(self):
@@ -142,7 +168,8 @@ class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
 
 
 class EditDistanceEvaluator():
-    
+    """Damerau-Levenshtein distance evaluator.
+    This algorithm is not a metric."""
     def __init__(self, penalties):
         self.penalties = penalties
 

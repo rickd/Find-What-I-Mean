@@ -124,6 +124,33 @@ class TestCustomSwapPenalties(unittest.TestCase):
         self.assertEqual(self.penalties.get_swap_penalty(),
                     old_penalty)
 
+class TestErrorGroupPenalties(unittest.TestCase):
+    
+    def setUp(self):
+        self.penalties = fwim.ErrorGroupPenalties()
+        
+    def test_penalties(self):
+        group_penalty = 3
+        base = 'e'
+        group = 'éèëẽê'
+        old_penalty = self.penalties.get_swap_penalty()
+        self.assertNotEqual(group_penalty, old_penalty)
+        
+        self.assertEqual(self.penalties.swap_cost('e', 'é'),
+                    old_penalty)
+        self.penalties.set_error_group_penalty(base, group, group_penalty)
+        self.assertEqual(self.penalties.swap_cost('e', 'é'),
+                    group_penalty)
+        self.assertEqual(self.penalties.swap_cost('è', 'e'),
+                    group_penalty)
+        self.assertEqual(self.penalties.swap_cost('é', 'ë'),
+                    group_penalty)
+        self.assertEqual(self.penalties.swap_cost('é', 'é'),
+                    0)
+        self.assertEqual(self.penalties.swap_cost('e', 'e'),
+                    0)
+        
+
 class TestDistanceEvaluator(unittest.TestCase):
 
     def setUp(self):
