@@ -141,6 +141,10 @@ class TestErrorGroupPenalties(unittest.TestCase):
         self.penalties.set_error_group_penalty(base, group, group_penalty)
         self.assertEqual(self.penalties.swap_cost('e', 'é'),
                     group_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'é'),
+                    old_penalty)
+        self.assertEqual(self.penalties.swap_cost('é', 'a'),
+                    old_penalty)
         self.assertEqual(self.penalties.swap_cost('è', 'e'),
                     group_penalty)
         self.assertEqual(self.penalties.swap_cost('é', 'ë'),
@@ -149,7 +153,30 @@ class TestErrorGroupPenalties(unittest.TestCase):
                     0)
         self.assertEqual(self.penalties.swap_cost('e', 'e'),
                     0)
+
+class TestAccentAdder(unittest.TestCase):
+    
+    def setUp(self):
+        self.penalties = fwim.ErrorGroupPenalties()
+    
+    def test_error_groups(self):
+        group_penalty = 3
+        old_penalty = self.penalties.get_swap_penalty()
+        self.assertNotEqual(group_penalty, old_penalty)
         
+        self.assertEqual(self.penalties.swap_cost('e', 'é'),
+                    old_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'ä'),
+                    old_penalty)
+        self.assertEqual(self.penalties.swap_cost('e', 'á'),
+                    old_penalty)
+        fwim.add_accent_groups(self.penalties, group_penalty)
+        self.assertEqual(self.penalties.swap_cost('e', 'é'),
+                    group_penalty)
+        self.assertEqual(self.penalties.swap_cost('a', 'ä'),
+                    group_penalty)
+        self.assertEqual(self.penalties.swap_cost('e', 'á'),
+                    old_penalty)
 
 class TestDistanceEvaluator(unittest.TestCase):
 

@@ -144,6 +144,22 @@ class ErrorGroupPenalties(CustomSwapPenalties):
                     return self.group_penalties[base1]
         return super(ErrorGroupPenalties, self).swap_cost(character1, character2)
 
+accent_groups = [
+                 ('a', 'áàäâã'),
+                 ('e', 'éèëêẽ'),
+                 ('i', 'íìïîĩ'),
+                 ('o', 'óòôôõ'),
+                 ('u', 'úùüûũ'),
+                 ('y', 'ÿ'),
+                 ('n', 'ñ'),
+                 ('s', 'ŝ')]
+
+def add_accent_groups(group_penalty, penalty_value):
+    global accent_groups
+    for g in accent_groups:
+        (base, others) = g
+        group_penalty.set_error_group_penalty(base, others, penalty_value)
+
 class CaseInsensitiveIgnoreOrderPenalties(CustomSwapPenalties):
 
     def __init__(self):
@@ -277,6 +293,7 @@ class CaseInsensitiveWordMatcher(BasicWordMatcher):
     def find_closest(self, word):
         self.check_string(word)
         return super(CaseInsensitiveWordMatcher, self).find_closest(word.lower())
+
 
 # Classic Burkhard-Keller Tree. This only works on
 # metrics. Damerau-Levenshtein is _not_ a metric. 
