@@ -19,7 +19,7 @@
 
 from fwim import *
 
-import sys, os
+import sys, time
 
 def load_words():
     ifile = open('/usr/share/dict/words')
@@ -30,6 +30,24 @@ def load_words():
             words.append(w)
     return words
 
+def build_bktree(words):
+    penalties = PlainLevenshteinPenalties()
+    dev = EditDistanceEvaluator(penalties)
+    bktree = BKTree(dev)
+    
+    for w in words:
+      bktree.add_word(w)
+      
+    return bktree
+
 if __name__ == '__main__':
     words = load_words()
-    print(len(words))
+    buildstart = time.time()
+    bktree = build_bktree(words)
+    searchstart = time.time()
+    results = bktree.find('hello', 30)
+    searchend = time.time()
+    print('Build time: ' + str(searchstart-buildstart))
+    print('Query time: ' + str(searchend-searchstart))
+
+    print(results)
