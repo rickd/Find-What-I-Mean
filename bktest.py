@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from fwim import *
+import pickle
 
 import sys, time
 
@@ -40,14 +41,28 @@ def build_bktree(words):
       
     return bktree
 
-if __name__ == '__main__':
+def create_bktree(filename):
     words = load_words()
     buildstart = time.time()
     bktree = build_bktree(words)
+    ofile = open(filename, mode='wb')
+    pickle.dump(bktree, ofile)
+    ofile.close()
+
+def query_bktree(filename):
+    bktree = load_bktree(filename)
     searchstart = time.time()
-    results = bktree.find('hello', 30)
+    results = bktree.find('hello', 20)
     searchend = time.time()
-    print('Build time: ' + str(searchstart-buildstart))
     print('Query time: ' + str(searchend-searchstart))
 
     print(results)
+
+def load_bktree(filename):
+    bktree = pickle.load(open(filename, mode='rb'))
+    return bktree
+
+
+if __name__ == '__main__':
+    #create_bktree(sys.argv[1])
+    query_bktree(sys.argv[1])
