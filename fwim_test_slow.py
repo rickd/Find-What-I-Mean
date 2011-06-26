@@ -1,4 +1,5 @@
 #!/usr/bin/python3 -tt
+# -*- coding: UTF-8 -*-
 
 #    All tests that are too slow to run during development
 #    Copyright (C) 2011 Rick Dangerous

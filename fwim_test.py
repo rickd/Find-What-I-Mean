@@ -1,4 +1,5 @@
 #!/usr/bin/python3 -tt
+# -*- coding: UTF-8 -*-
 
 #    Tests the finder system.
 #    Copyright (C) 2011 Rick Dangerous

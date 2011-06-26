@@ -1,4 +1,5 @@
 #!/usr/bin/python3 -tt
+# -*- coding: UTF-8 -*-
 
 #    Simple tester for BK tree searcher
 #    Copyright (C) 2011 Rick Dangerous
@@ -31,3 +32,4 @@ def load_words():
 
 if __name__ == '__main__':
     words = load_words()
+    print(len(words))

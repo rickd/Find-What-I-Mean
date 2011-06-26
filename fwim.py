@@ -1,4 +1,5 @@
 #!/usr/bin/python3 -tt
+# -*- coding: UTF-8 -*-
 
 #    Search for matches in word lists accounting for errors
 #    Copyright (C) 2011 Rick Dangerous
