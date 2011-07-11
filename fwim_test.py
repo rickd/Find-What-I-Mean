@@ -213,7 +213,7 @@ class TestDistanceEvaluator(unittest.TestCase):
                          6*self.penalties.get_add_penalty())
 
         self.assertEqual(self.dev.distance('abc', 'abcd'),
-                         self.penalties.get_add_penalty())
+                         self.penalties.get_end_add_penalty())
         self.assertEqual(self.dev.distance('abc', 'dabc'),
                          self.penalties.get_add_penalty())
         self.assertEqual(self.dev.distance('abc', 'adbc'),
@@ -258,7 +258,21 @@ class TestDistanceEvaluator(unittest.TestCase):
 
         self.assertEqual(self.dev.distance('abcdefg', 'acbdefgz'),
                          self.penalties.get_transpose_penalty() +
-                         self.penalties.get_add_penalty())
+                         self.penalties.get_end_add_penalty())
+
+class TestEndAddEvaluator(unittest.TestCase):
+    
+    def setUp(self):
+        self.penalties = fwim.LessEndPenalties()
+        self.evaluator = fwim.EditDistanceEvaluator(self.penalties)
+        
+    def test_end_penalties(self):
+        self.assertEquals(self.evaluator.distance('hello', 'hello'), 0)
+        self.assertEquals(self.evaluator.distance('hello', 'aaahello'),
+                        3*self.penalties.get_add_penalty())
+        self.evaluator.print_debug = True
+        self.assertEquals(self.evaluator.distance('hello', 'helloaaa'),
+                        3*self.penalties.get_end_add_penalty())
 
 class TestPlainLevenshtein(unittest.TestCase):
 

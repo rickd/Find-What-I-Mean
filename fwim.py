@@ -25,6 +25,7 @@ class BasicPenalties():
         self.drop_penalty = 10      # 'abc' -> 'ac'
         self.add_penalty = 10       # 'ac' -> 'abc'
         self.swap_penalty = 10      # 'ab' -> 'ac'
+        self.end_add_penalty = 10   # Add penalty when source string is exhausted.
 
     def get_transpose_penalty(self):
         return self.transpose_penalty
@@ -37,6 +38,9 @@ class BasicPenalties():
 
     def get_swap_penalty(self):
         return self.swap_penalty
+    
+    def get_end_add_penalty(self):
+        return self.end_add_penalty
 
     def check_params_single_characters(self, character1, character2):
         if type(character1) != type('s'):
@@ -78,7 +82,16 @@ values for every type of error."""
         self.transpose_penalty = 11
         self.drop_penalty = 12
         self.add_penalty = 13
-        self.swap_penalty = 14
+        self.end_add_penalty = 14
+        self.swap_penalty = 15
+
+class LessEndPenalties(BasicPenalties):
+    """Adding at the end of the word has smaller penalty.
+Useful in iterative queries."""
+
+    def __init__(self):
+        super(LessEndPenalties, self).__init__()
+        self.end_add_penalty = 2
 
 class CustomSwapPenalties(BasicPenalties):
     """A class that allows the user to
@@ -189,6 +202,7 @@ class EditDistanceEvaluator():
     This algorithm is not a metric."""
     def __init__(self, penalties):
         self.penalties = penalties
+        self.print_debug = False
 
     def distance(self, source, target):
         if type(source) != type('s'):
@@ -224,7 +238,11 @@ class EditDistanceEvaluator():
                 subst_penalty = d[i-1][j-1] + \
                     self.penalties.swap_cost(source_letter, target_letter)
                 del_penalty = d[i-1][j] + self.penalties.get_drop_penalty()
-                add_penalty = d[i][j-1] + self.penalties.get_add_penalty()
+                if j == l2:
+                    add_pen = self.penalties.get_end_add_penalty()
+                else:
+                    add_pen = self.penalties.get_add_penalty()
+                add_penalty = d[i][j-1] + add_pen
                 # Transpose is tricky.
                 if i >= 2 and j >= 2 and source[source_loc] == target[target_loc-1] and \
                         source[source_loc-1] == target[target_loc]:
@@ -234,8 +252,22 @@ class EditDistanceEvaluator():
                 total_penalty = min(subst_penalty, del_penalty,\
                                         add_penalty, transpose_penalty)
                 d[i][j] = total_penalty
-
+            
+        if self.print_debug:
+            self.print_matrix(source, target, d)
         return d[-1][-1]
+    
+    def print_matrix(self, source, target, d):
+        print('\n  ', end='')
+        for i in target:
+            print(' ' + i, end='')
+        print('')
+        assert(len(source) + 1 == len(d))
+        assert(len(target) + 1 == len(d[0]))
+        for i in source:
+            print(i)
+#            for j in len(target)
+            
 
 class BasicWordMatcher():
     def __init__(self, penalty=None, evaluator=None):
