@@ -238,7 +238,7 @@ class EditDistanceEvaluator():
                 subst_penalty = d[i-1][j-1] + \
                     self.penalties.swap_cost(source_letter, target_letter)
                 del_penalty = d[i-1][j] + self.penalties.get_drop_penalty()
-                if j == l2:
+                if j > l1:
                     add_pen = self.penalties.get_end_add_penalty()
                 else:
                     add_pen = self.penalties.get_add_penalty()
