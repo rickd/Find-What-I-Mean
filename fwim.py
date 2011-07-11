@@ -258,15 +258,21 @@ class EditDistanceEvaluator():
         return d[-1][-1]
     
     def print_matrix(self, source, target, d):
-        print('\n  ', end='')
+        print('\n   ', end='')
         for i in target:
-            print(' ' + i, end='')
+            print('  ' + i, end='')
         print('')
         assert(len(source) + 1 == len(d))
         assert(len(target) + 1 == len(d[0]))
-        for i in source:
-            print(i)
+        for i in range(len(d)):
+            if i > 0:
+                print(source[i-1], end='')
+            else:
+                print(' ', end='')
+            for j in range(len(d[0])):
+                print(' ' + str(d[i][j]), end='')
 #            for j in len(target)
+            print('')
             
 
 class BasicWordMatcher():
