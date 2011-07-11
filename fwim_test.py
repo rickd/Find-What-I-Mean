@@ -270,7 +270,8 @@ class TestEndAddEvaluator(unittest.TestCase):
         self.assertEquals(self.evaluator.distance('hello', 'hello'), 0)
         self.assertEquals(self.evaluator.distance('hello', 'aaahello'),
                         3*self.penalties.get_add_penalty())
-        #self.evaluator.print_debug = True
+        self.assertEquals(self.evaluator.distance('hello', 'haaaello'),
+                        3*self.penalties.get_add_penalty())
         self.assertEquals(self.evaluator.distance('hello', 'helloaaa'),
                         3*self.penalties.get_end_add_penalty())
 
