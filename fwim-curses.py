@@ -18,7 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import curses
+import curses, sys
 
 stdscr = None
 
@@ -34,7 +34,7 @@ def init_graphics():
 def draw_screen():
     global stdscr, query
     stdscr.erase()
-    stdscr.addstr(0, 0, "Query string")
+    stdscr.addstr(0, 0, "Query string (press shift-q to exit)")
     stdscr.addstr(2, 0, query)
     stdscr.refresh()
 
@@ -47,15 +47,16 @@ def shutdown_graphics(foo=None):
 def process_input():
     global stdscr, query
     c = stdscr.getkey()
+    if c == 'Q' or c == 'KEY_ESCAPE':
+        sys.exit(0)
     if c == 'KEY_BACKSPACE':
         query = query[:-1]
-    if len(c) == '1':
+    else:
         query += c
-    if c == 'KEY_ESCAPE':
-        sys.exit(0)
 
 if __name__ == '__main__':
     init_graphics()
+    #curses.wrapper(shutdown_graphics)
     draw_screen()
     try:
         while True:
@@ -63,3 +64,4 @@ if __name__ == '__main__':
             draw_screen()
     finally:
         shutdown_graphics()
+        print("Query is: " + query)
