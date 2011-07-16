@@ -20,18 +20,46 @@
 
 import curses
 
-stdcsr = None
+stdscr = None
+
+query = ''
 
 def init_graphics():
-    stdcsr = curses.initscr()
+    global stdscr
+    stdscr = curses.initscr()
     curses.noecho()
     curses.cbreak()
-    stdcsr.keypad(1)
+    stdscr.keypad(1)
 
-def shutdown_graphics():
+def draw_screen():
+    global stdscr, query
+    stdscr.erase()
+    stdscr.addstr(0, 0, "Query string")
+    stdscr.addstr(2, 0, query)
+    stdscr.refresh()
+
+def shutdown_graphics(foo=None):
+    curses.nocbreak()
+    stdscr.keypad(0)
+    curses.echo()
     curses.endwin()
+
+def process_input():
+    global stdscr, query
+    c = stdscr.getkey()
+    if c == 'KEY_BACKSPACE':
+        query = query[:-1]
+    if len(c) == '1':
+        query += c
+    if c == 'KEY_ESCAPE':
+        sys.exit(0)
 
 if __name__ == '__main__':
     init_graphics()
-    print("Hallo")
-    shutdown_graphics()
+    draw_screen()
+    try:
+        while True:
+            process_input()
+            draw_screen()
+    finally:
+        shutdown_graphics()
