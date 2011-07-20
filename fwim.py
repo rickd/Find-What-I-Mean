@@ -287,6 +287,9 @@ class BasicWordMatcher():
             self.dev = evaluator
         self.words = set()
         
+    def get_penalties(self):
+        return self.penalties
+        
     def size(self):
         return len(self.words)
 
@@ -319,6 +322,14 @@ class BasicWordMatcher():
                 closest = w
 
         return (min_penalty, closest)
+    
+    def find_within(self, word, max_error):
+        within = []
+        for w in self.words:
+            dist = self.dev.distance(word, w)
+            if dist <= max_error:
+                within.append((dist, w))
+        return within
 
 class CaseInsensitiveWordMatcher(BasicWordMatcher):
 

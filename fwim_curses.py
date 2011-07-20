@@ -24,6 +24,8 @@ stdscr = None
 
 query = ''
 
+
+
 def init_graphics():
     global stdscr
     stdscr = curses.initscr()

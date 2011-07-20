@@ -507,6 +507,20 @@ class TestBasicWordMatcher(unittest.TestCase):
         self.assertEqual(match, 'two')
         (penalty, match) = self.matcher.find_closest('thrice')
         self.assertEqual(match, 'three')
+        
+    def test_matching(self):
+        self.matcher.add_word('aaa_aaa')
+        self.matcher.add_word('aaa_aab')
+        self.matcher.add_word('aaa_abb')
+        self.matcher.add_word('aaa_bbb')
+        swap_p = self.matcher.get_penalties().get_swap_penalty()
+        
+        self.assertEqual(len(self.matcher.find_within('aaa_aa', 0)), 0)
+        self.assertEqual(len(self.matcher.find_within('aaa_aaa', 0)), 1)
+        self.assertEqual(len(self.matcher.find_within('aaa_aaa', swap_p)), 2)
+        self.assertEqual(len(self.matcher.find_within('aaa_aaa', 2*swap_p)), 3)
+        self.assertEqual(len(self.matcher.find_within('aaa_aaa', 3*swap_p)), 4)
+        
 
 class TestCaseInsensitiveWordMatcher(unittest.TestCase):
     def setUp(self):
