@@ -19,12 +19,20 @@
 
 
 import curses, sys
+from fwim import *
 
 stdscr = None
 
 query = ''
+matches = []
 
+penalties = LessEndPenalties()
+evaluator = EditDistanceEvaluator(penalties)
+matcher = BasicWordMatcher(penalties, evaluator)
 
+def load_data(dfile):
+    for line in open(dfile):
+        matcher.add_word(line.strip())
 
 def init_graphics():
     global stdscr
@@ -38,7 +46,11 @@ def draw_screen():
     stdscr.erase()
     stdscr.addstr(0, 0, "Query string (press shift-q to exit)")
     stdscr.addstr(2, 0, query)
+    
+    for i in range(len(matches)):
+        stdscr.addstr(4+i, 0, matches[i][1])
     stdscr.refresh()
+    
 
 def shutdown_graphics(foo=None):
     curses.nocbreak()
@@ -54,15 +66,29 @@ def process_input():
     if c == 'KEY_BACKSPACE':
         query = query[:-1]
     else:
-        query += c
+        query = (query + c).lower()
+
+def match():
+    global query, matches
+    if query == '':
+        m = []
+    else:
+        m = matcher.find_within(query, 100)[:10]
+    matches = m
+    
 
 if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print(sys.argv[0] + ' <data file>')
+        sys.exit(1)
+    load_data(sys.argv[1])
     init_graphics()
     #curses.wrapper(shutdown_graphics)
     draw_screen()
     try:
         while True:
             process_input()
+            match()
             draw_screen()
     finally:
         shutdown_graphics()
