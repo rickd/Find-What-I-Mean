@@ -329,6 +329,7 @@ class BasicWordMatcher():
             dist = self.dev.distance(word, w)
             if dist <= max_error:
                 within.append((dist, w))
+        within.sort(key=(lambda x : x[0]))
         return within
 
 class CaseInsensitiveWordMatcher(BasicWordMatcher):
