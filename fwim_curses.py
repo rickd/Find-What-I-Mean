@@ -32,7 +32,7 @@ matcher = BasicWordMatcher(penalties, evaluator)
 
 def load_data(dfile):
     for line in open(dfile):
-        matcher.add_word(line.strip())
+        matcher.add_word(line.strip().lower())
 
 def init_graphics():
     global stdscr
