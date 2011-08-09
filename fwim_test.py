@@ -521,6 +521,9 @@ class TestBasicWordMatcher(unittest.TestCase):
         self.assertEqual(len(self.matcher.find_within('aaa_aaa', 2*swap_p)), 3)
         self.assertEqual(len(self.matcher.find_within('aaa_aaa', 3*swap_p)), 4)
         
+    def test_spaces(self):
+        m_s = fwim.BasicWordMatcher(allow_spaces=True)
+        m_s.add_word("foo bar")
 
 class TestCaseInsensitiveWordMatcher(unittest.TestCase):
     def setUp(self):

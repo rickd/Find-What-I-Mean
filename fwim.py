@@ -276,7 +276,7 @@ class EditDistanceEvaluator():
             
 
 class BasicWordMatcher():
-    def __init__(self, penalty=None, evaluator=None):
+    def __init__(self, penalty=None, evaluator=None, allow_spaces=False):
         if penalty is None:
             self.penalties = BasicPenalties()
         else:
@@ -286,6 +286,7 @@ class BasicWordMatcher():
         else:
             self.dev = evaluator
         self.words = set()
+        self.allow_spaces = allow_spaces
         
     def get_penalties(self):
         return self.penalties
@@ -299,7 +300,7 @@ class BasicWordMatcher():
 
     def check_single_word(self, word):
         self.check_string(word)
-        if ' ' in word:
+        if not self.allow_spaces and ' ' in word:
             raise TypeError('Argument is not a single word.')
 
     def add_word(self, word):

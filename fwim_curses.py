@@ -28,7 +28,7 @@ matches = []
 
 penalties = LessEndPenalties()
 evaluator = EditDistanceEvaluator(penalties)
-matcher = BasicWordMatcher(penalties, evaluator)
+matcher = BasicWordMatcher(penalties, evaluator, True)
 
 def load_data(dfile):
     for line in open(dfile):
