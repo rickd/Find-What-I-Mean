@@ -35,3 +35,15 @@ Then the search "hellp" probably means "hello", since o and p are very
 close in the keyboard, it is the most probable typo.
 
 And so on and so on.
+
+
+Test application
+
+Run './fwim_curses.py "list of countries.txt"'.
+
+It searches the list of countries for you. Things to try:
+
+ger (easy, Germany at the top)
+brab (finds Brazil and Barbados, as you would expect)
+kirgistan (sound-alike to Kyrgyzstan)
+francais (its kinda like France)
